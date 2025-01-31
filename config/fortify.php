@@ -19,7 +19,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Fortify Password Broker
+    | Fortify Password Broke
     |--------------------------------------------------------------------------
     |
     | Here you may specify which password broker Fortify can use when a user
