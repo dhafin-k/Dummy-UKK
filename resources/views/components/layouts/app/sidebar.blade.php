@@ -15,9 +15,12 @@
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="users" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                        Users
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
 
-                <flux:sidebar.group expandable expanded="false" heading="Data Parkir" icon="truck" class="grid">
+                <flux:sidebar.group expandable expanded="{{ request()->routeIs('admin.tarif-parkir.*') ? 'true' : 'false' }}" heading="Data Parkir" icon="truck" class="grid">
                     <flux:sidebar.item
                         icon="map-pin"
                         wire:navigate>
@@ -25,6 +28,8 @@
                     </flux:sidebar.item>
                     <flux:sidebar.item
                         icon="currency-dollar"
+                        :href="route('admin.tarif-parkir.index')"
+                        :current="request()->routeIs('admin.tarif-parkir.index')"
                         wire:navigate>
                        {{ __('Tarif Parkir') }}
                     </flux:sidebar.item>

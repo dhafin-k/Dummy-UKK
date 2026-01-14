@@ -15,6 +15,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::prefix('tarif-parkir')->name('tarif-parkir.')->group(function () {
         Route::get('/', [TarifParkirController::class, 'index'])->name('index');
         Route::get('/create', [TarifParkirController::class, 'create'])->name('create');
+        Route::post('/', [TarifParkirController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [TarifParkirController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [TarifParkirController::class, 'update'])->name('update');
+        Route::delete('/{id}', [TarifParkirController::class, 'destroy'])->name('destroy');
     });
 });
 
