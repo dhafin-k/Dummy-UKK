@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -13,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::where("id", "!=", Auth::user()->id)->paginate(10);
         return view('admin.users.index', [
             'users' => $users
         ]);
@@ -100,6 +101,12 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $data = User::findOrFail($id);
+        try {
+            $data->delete();
+            return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
+        } catch(\Exception $e) {
+            return redirect()->route('admin.users.index')->with('error', 'Terjadi kesalahan saat menghapus user.');
+        }
     }
 }

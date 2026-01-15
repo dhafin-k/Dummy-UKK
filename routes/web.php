@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TarifParkirController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,6 +21,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
         Route::put('/{id}', [TarifParkirController::class, 'update'])->name('update');
         Route::delete('/{id}', [TarifParkirController::class, 'destroy'])->name('destroy');
     });
+
+    Route::resource('users', UserController::class);
 });
 
 
