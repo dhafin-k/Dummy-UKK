@@ -1,3 +1,11 @@
+<?php 
+    use Illuminate\Support\Facades\Auth;
+
+    $user = Auth::user();
+    $role = $user ? $user->role : null;
+?>
+
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
@@ -11,11 +19,12 @@
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
+                @if($role === 'admin')
                 <flux:sidebar.group :heading="__('Platform')" class="grid gap-2">
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="users" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                    <flux:sidebar.item icon="users" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>
                         Users
                     </flux:sidebar.item>
                 </flux:sidebar.group>
@@ -40,27 +49,7 @@
                 <flux:sidebar.item icon="circle-stack" wire:navigate>
                     {{ __('Log Aktivitas') }}
                 </flux:sidebar.item>
-
-                {{-- <flux:sidebar.group expandable expanded="false" heading="Parkir" icon="truck" class="grid">
-                    <flux:sidebar.item
-                        icon="map-pin"
-                        :href="route('parkir.area')"
-                        :current="request()->routeIs('parkir.area')"
-                        wire:navigate
-                    >
-                        {{ __('Area Parkir') }}
-                    </flux:sidebar.item>
-
-                    <flux:sidebar.item
-                        icon="tag"
-                        :href="route('parkir.tarif')"
-                        :current="request()->routeIs('parkir.tarif')"
-                        wire:navigate
-                    >
-                        {{ __('Tarif Parkir') }}
-                    </flux:sidebar.item>
-                </flux:sidebar.group> --}}
-
+                @endif
             </flux:sidebar.nav>
 
             <flux:spacer />
