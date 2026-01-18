@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AreaParkirController;
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\LogAktivitasController;
 use App\Http\Controllers\TarifParkirController;
+use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +16,7 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::prefix('tarif-parkir')->name('tarif-parkir.')->group(function () {
         Route::get('/', [TarifParkirController::class, 'index'])->name('index');
         Route::get('/create', [TarifParkirController::class, 'create'])->name('create');
@@ -27,6 +29,11 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('area-parkir', AreaParkirController::class);
     Route::resource('kendaraan', KendaraanController::class);
+    Route::resource('log-aktivitas', LogAktivitasController::class)->only(['index', 'destroy']);
+});
+
+Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')->group(function () {
+    Route::resource('transaksi', TransaksiController::class);
 });
 
 
