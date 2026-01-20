@@ -43,7 +43,7 @@ class TarifParkirController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id) { 
         $validated = $request->validate([
             'jenis_kendaraan' => 'sometimes|in:mobil,motor,lainnya',
             'tarif_per_jam' => 'sometimes|numeric|min:0'

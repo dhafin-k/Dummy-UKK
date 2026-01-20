@@ -19,9 +19,9 @@ class TransaksiController extends Controller
      */
     public function index()
     {
-        $data = Transaksi::with(['kendaraan', 'areaParkir', 'user', 'tarif'])->paginate(10);
+        $data = Transaksi::with(['kendaraan', 'area', 'user', 'tarif'])->paginate(10);
         return view('petugas.transaksi.index', [
-            'data' => $data
+            'transaksis' => $data
         ]);
     }
 

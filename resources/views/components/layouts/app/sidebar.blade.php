@@ -41,11 +41,13 @@ $role = $user ? $user->role : null;
                         :current="request()->routeIs('admin.area-parkir.*')" wire:navigate>
                         {{ __('Area Parkir') }}
                     </flux:sidebar.item>
+
                     <flux:sidebar.item icon="currency-dollar" :href="route('admin.tarif-parkir.index')"
                         :current="request()->routeIs('admin.tarif-parkir.*')" wire:navigate>
                         {{ __('Tarif Parkir') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+                
                 <flux:sidebar.item :href="route('admin.kendaraan.index')"
                     :current="request()->routeIs('admin.kendaraan.*')" icon="truck" wire:navigate>
                     {{ __('Kendaraan') }}

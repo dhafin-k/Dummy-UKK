@@ -1,6 +1,6 @@
 <x-layouts.app :title="__('Tarif Parkir')">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 gap-4">
-        <div>    
+        <div>
             <flux:heading size="xl">Tarif Parkir</flux:heading>
             <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
                 Kelola tarif parkir untuk berbagai jenis kendaraan.
@@ -65,12 +65,12 @@
                                         </svg>
                                         Edit
                                     </a>
-                                    <form action="{{ route('admin.tarif-parkir.destroy', $tarif) }}" method="POST" 
-                                          onsubmit="return confirm('Yakin ingin menghapus tarif ini?')" 
+                                    <form action="{{ route('admin.tarif-parkir.destroy', $tarif) }}" method="POST"
+                                          onsubmit="return confirm('Yakin ingin menghapus tarif ini?')"
                                           class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" 
+                                        <button type="submit"
                                                 class="inline-flex items-center gap-1 px-3 py-1.5 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -91,7 +91,7 @@
                                     <p class="text-sm text-gray-500 dark:text-gray-400">
                                         Belum ada data tarif parkir.
                                     </p>
-                                    <a href="{{ route('admin.tarif-parkir.create') }}" 
+                                    <a href="{{ route('admin.tarif-parkir.create') }}"
                                        class="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
                                         Tambah Tarif Pertama
                                     </a>
