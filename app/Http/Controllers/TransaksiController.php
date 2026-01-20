@@ -19,7 +19,8 @@ class TransaksiController extends Controller
      */
     public function index()
     {
-        $data = Transaksi::with(['kendaraan', 'area', 'user', 'tarif'])->paginate(10);
+        $data = Transaksi::with(['kendaraan', 'area', 'user', 'tarif'])
+            ->paginate(10);
         return view('petugas.transaksi.index', [
             'transaksis' => $data
         ]);
@@ -30,40 +31,84 @@ class TransaksiController extends Controller
      */
     public function create()
     {
-        return view('petugas.transaksi.create');
+        return view('petugas.transaksi.create', [
+            'kendaraans' => Kendaraan::all(),
+            'tarifs' => Tarif::all(),
+            'areas' => AreaParkir::whereColumn('terisi', '<', 'kapasitas')->get()
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
-     */
+    */
     public function store(Request $request)
     {
+        // \Illuminate\Support\Facades\Log::error('VALIDASIII');
         $validated = $request->validate([
             'id_kendaraan' => 'required|exists:kendaraans,id',
-            'waktu_masuk' => 'required|datetime',
+            'waktu_masuk' => 'nullable|datetime',
             'waktu_keluar' => 'nullable|datetime|after:waktu_masuk',
             'id_tarif' => 'required|exists:tarifs,id',
+            'id_area' => 'required|exists:area__parkirs,id',
             'durasi_jam' => 'nullable|integer|min:0',
             'biaya_total' => 'nullable|decimal:10,0',
-            'status' => 'required|in:masuk,keluar',
-            'id_area' => 'required|exists:area_parkirs,id'
+            'status' => 'nullable|in:masuk,keluar',
+        ], [
         ]);
+        // \Illuminate\Support\Facades\Log::error('TESSS VALIDASII BERHASIL');
 
         try {
-            DB::beginTransaction();
+        DB::beginTransaction();
+        // Ambil data yang diperlukan
+        $area = AreaParkir::findOrFail($validated['id_area']);
+        $kendaraan = Kendaraan::findOrFail($validated['id_kendaraan']);
 
-            $data = Transaksi::create($validated);
-            $log = LogAktivitas::create([
-                'id_user' => Auth::user()->id,
-                'aktivitas' => 'Menambahkan transaksi untuk kendaraan ID ' . $validated['id_kendaraan'],
-                'waktu_aktivitas' => now()
-            ]);
+        // Cek kapasitas area parkir
+        if ($area->terisi >= $area->kapasitas) {
+            return back()
+                ->withInput()
+                ->with('error', 'Area parkir ' . $area->nama_area . ' sudah penuh!');
+        }
 
-            DB::commit();
-            return redirect()->route('petugas.transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
-        } catch (\Exception $e) {
+        // Cek apakah kendaraan sudah dalam status parkir
+        $masihParkir = Transaksi::where('id_kendaraan', $validated['id_kendaraan'])
+            ->where('status', 'masuk')
+            ->exists();
+
+        if ($masihParkir) {
+            return back()
+                ->withInput()
+                ->with('error', 'Kendaraan ' . $kendaraan->plat_nomor . ' masih dalam status parkir!');
+        }
+
+        // Simpan transaksi
+        Transaksi::create([
+            'id_kendaraan' => $validated['id_kendaraan'],
+            'id_tarif' => $validated['id_tarif'],
+            'id_area' => $validated['id_area'],
+            'id_user' => Auth::user()->id,
+            'waktu_masuk' => now(),
+            'status' => 'masuk',
+        ]);
+
+        // Update area terisi
+        $area->increment('terisi');
+
+        // Log aktivitas
+        LogAktivitas::create([
+            'id_user' => Auth::user()->id,
+            'aktivitas' => 'Kendaraan masuk: ' . $kendaraan->plat_nomor . ' - Area: ' . $area->nama_area,
+            'waktu_aktivitas' => now(),
+        ]);
+
+        DB::commit();
+
+        return redirect()
+            ->route('petugas.transaksi.index')
+            ->with('success', 'Kendaraan ' . $kendaraan->plat_nomor . ' berhasil masuk parkir!');
+        } catch(\Exception $e) {
             DB::rollBack();
-            return redirect()->route('petugas.transaksi.index')->with('error', 'Transaksi gagal ditambahkan.');
+            return redirect()->route('petugas.transaksi.index')->with('error', $e->getMessage());
         }
     }
 

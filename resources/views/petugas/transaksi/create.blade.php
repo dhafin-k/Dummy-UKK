@@ -26,7 +26,7 @@
                     <label for="id_kendaraan" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                         Pilih Kendaraan <span class="text-red-500">*</span>
                     </label>
-                    <select name="id_kendaraan" id="id_kendaraan"
+                    <select name="id_kendaraan" id="id_kendaraan" required
                             class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="">Pilih Kendaraan</option>
                         @foreach($kendaraans as $kendaraan)
@@ -46,7 +46,7 @@
                     <label for="id_tarif" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                         Pilih Tarif <span class="text-red-500">*</span>
                     </label>
-                    <select name="id_tarif" id="id_tarif"
+                    <select name="id_tarif" id="id_tarif" required
                             class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="">Pilih Tarif</option>
                         @foreach($tarifs as $tarif)
@@ -66,7 +66,7 @@
                     <label for="id_area" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                         Pilih Area Parkir <span class="text-red-500">*</span>
                     </label>
-                    <select name="id_area" id="id_area"
+                    <select name="id_area" id="id_area" required
                             class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="">Pilih Area</option>
                         @foreach($areas as $area)

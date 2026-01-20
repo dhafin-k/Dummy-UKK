@@ -8,6 +8,18 @@ class Transaksi extends Model
 {
     protected $guarded = [];
 
+    protected $fillable = [
+        'id_kendaraan',
+        'waktu_masuk',
+        'waktu_keluar',
+        'id_tarif',
+        'durasi_jam',
+        'biaya_total',
+        'status',
+        'id_user',
+        'id_area',
+    ];
+
     protected $casts = [
         'waktu_masuk' => 'datetime',
         'waktu_keluar' => 'datetime',
