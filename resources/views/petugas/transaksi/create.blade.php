@@ -66,7 +66,7 @@
                     <label for="id_area" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                         Pilih Area Parkir <span class="text-red-500">*</span>
                     </label>
-                    <select name="id_area" id="id_area" required
+                    {{-- <select name="id_area" id="id_area" required
                             class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="">Pilih Area</option>
                         @foreach($areas as $area)
@@ -74,7 +74,8 @@
                                 {{ $area->nama_area }} ({{ $area->terisi }}/{{ $area->kapasitas }})
                             </option>
                         @endforeach
-                    </select>
+                    </select> --}}
+                    <input type="hidden" name="id_area" value="{{ request()->query('id_area') }}" />
                     @error('id_area')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
@@ -83,7 +84,7 @@
             </div>
 
             <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-700">
-                <a href="{{ route('petugas.transaksi.index') }}"
+                <a href="{{ route('petugas.transaksi.index', ['area' => request()->query('area')]) }}"
                    class="px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors">
                     Batal
                 </a>

@@ -46,7 +46,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <div class="flex gap-2">
-                                    <form action="{{ route('admin.log_aktivitas.destroy', $log) }}" method="POST" 
+                                    <form action="{{ route('admin.log-aktivitas.destroy', $log) }}" method="POST" 
                                           onsubmit="return confirm('Yakin ingin menghapus kendaraan ini?')" 
                                           class="inline">
                                         @csrf

@@ -8,6 +8,8 @@ use App\Models\LogAktivitas;
 use App\Models\Tarif;
 use App\Models\Transaksi;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,10 +19,15 @@ class TransaksiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Transaksi::with(['kendaraan', 'area', 'user', 'tarif'])
-            ->paginate(10);
+        $area = $request->query('area', null);
+        $data = Transaksi::with(['kendaraan', 'area', 'user', 'tarif']);
+        if($area) {
+            $data = $data->where('id_area', $area);
+        }
+        $data= $data->paginate(10);
+
         return view('petugas.transaksi.index', [
             'transaksis' => $data
         ]);
@@ -49,7 +56,7 @@ class TransaksiController extends Controller
             'waktu_masuk' => 'nullable|datetime',
             'waktu_keluar' => 'nullable|datetime|after:waktu_masuk',
             'id_tarif' => 'required|exists:tarifs,id',
-            'id_area' => 'required|exists:area__parkirs,id',
+            'id_area' => 'required|exists:area_parkirs,id',
             'durasi_jam' => 'nullable|integer|min:0',
             'biaya_total' => 'nullable|decimal:10,0',
             'status' => 'nullable|in:masuk,keluar',
@@ -146,20 +153,32 @@ class TransaksiController extends Controller
     {
         $validated = $request->validate([
             'id_kendaraan' => 'sometimes|exists:kendaraans,id',
-            'waktu_masuk' => 'sometimes|datetime',
-            'waktu_keluar' => 'nullable|datetime|after:waktu_masuk',
             'id_tarif' => 'sometimes|exists:tarifs,id',
-            'durasi_jam' => 'nullable|integer|min:0',
-            'biaya_total' => 'nullable|decimal:10,0',
             'status' => 'sometimes|in:masuk,keluar',
             'id_area' => 'sometimes|exists:area_parkirs,id'
         ]);
 
+        $validated['waktu_keluar'] = now();
+
         try {
             DB::beginTransaction();
 
-            $data = Transaksi::findOrFail($id);
-            $data->update($validated);
+            $transaksi = Transaksi::with('tarif')->findOrFail($id);
+            
+            $waktuMasuk = Carbon::parse($transaksi->waktu_masuk);
+            $waktuKeluar = Carbon::parse($validated['waktu_keluar']);
+
+            $durasiJam = ceil($waktuMasuk->diffInMinutes($waktuKeluar) / 60);
+
+            $tarifPerJam = $transaksi->tarif->tarif_per_jam;
+            $biayaTotal = $durasiJam * $tarifPerJam;
+
+            $validated['durasi_jam'] = $durasiJam;
+            $validated['biaya_total'] = $biayaTotal;
+            $validated['status']= 'keluar';
+
+            $transaksi->area()->decrement('terisi'); 
+            $transaksi->update($validated);
 
             $log = LogAktivitas::create([
                 'id_user' => Auth::user()->id,
@@ -189,5 +208,14 @@ class TransaksiController extends Controller
             return redirect()->route('petugas.transaksi.index')->with('error', 'Transaksi gagal dihapus.');
 
         }
+    }
+
+    public function cetakStruk($id)
+    {
+        $transaksi = Transaksi::with(['kendaraan', 'area', 'tarif'])->findOrFail($id);
+
+        $pdf = Pdf::loadView('petugas.transaksi.struk', compact('transaksi'))->setPaper([0, 0, 226, 600]);
+
+        return $pdf->stream('struk_parkir'. $transaksi->id . '.pdf');
     }
 }

@@ -1,8 +1,11 @@
 <?php
 use Illuminate\Support\Facades\Auth;
+use App\Models\AreaParkir;
 
 $user = Auth::user();
 $role = $user ? $user->role : null;
+
+$areaParkir = AreaParkir::all();
 ?>
 
 
@@ -47,7 +50,7 @@ $role = $user ? $user->role : null;
                         {{ __('Tarif Parkir') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
-                
+
                 <flux:sidebar.item :href="route('admin.kendaraan.index')"
                     :current="request()->routeIs('admin.kendaraan.*')" icon="truck" wire:navigate>
                     {{ __('Kendaraan') }}
@@ -69,9 +72,23 @@ $role = $user ? $user->role : null;
                         Transaksi
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+
+                <flux:sidebar.group expandable
+                    expanded heading="Area Parkir"
+                    icon="truck" class="grid">
+
+                    @forelse ($areaParkir as $area)
+                        <flux:sidebar.item icon="map-pin" :href="route('petugas.transaksi.index', ['area' => $area->id])"
+                            :current="request()->routeIs('petugas.transaksi.index') && request()->query('area') == $area->id" wire:navigate>
+                            {{ $area->nama_area }}
+                        </flux:sidebar.item>
+                    @empty
+                        <p>Tidak tersedia area parkir.</p>
+                    @endforelse
+                </flux:sidebar.group>
             @endif
 
-            @if($role === 'owner')
+            @if ($role === 'owner')
                 <flux:sidebar.group :heading="__('Platform')" class="grid gap-2">
                     <flux:sidebar.item icon="home" :href="route('dashboard')"
                         :current="request()->routeIs('dashboard')" wire:navigate>

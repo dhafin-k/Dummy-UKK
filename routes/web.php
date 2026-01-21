@@ -34,6 +34,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')->group(function () {
     Route::resource('transaksi', TransaksiController::class);
+    Route::get('cetak-struk/{id}', [TransaksiController::class, 'cetakStruk'])->name('transaksi.cetak-struk');
 });
 
 
