@@ -62,4 +62,12 @@ class User extends Authenticatable
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
+
+    /**
+     * Relasi ke transaksi
+     */
+    public function transaksis()
+    {
+        return $this->hasMany(Transaksi::class, 'id_user');
+    }
 }

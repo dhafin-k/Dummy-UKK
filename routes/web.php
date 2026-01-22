@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AreaParkirController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\LogAktivitasController;
 use App\Http\Controllers\TarifParkirController;
@@ -12,7 +13,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
+Route::get('dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
