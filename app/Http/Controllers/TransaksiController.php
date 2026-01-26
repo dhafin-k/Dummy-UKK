@@ -214,7 +214,7 @@ class TransaksiController extends Controller
     {
         $transaksi = Transaksi::with(['kendaraan', 'area', 'tarif'])->findOrFail($id);
 
-        $pdf = Pdf::loadView('petugas.transaksi.struk', compact('transaksi'))->setPaper([0, 0, 226, 600]);
+        $pdf = Pdf::loadView('petugas.transaksi.struk', compact('transaksi'))->setPaper([0, 0, 226, 350]);
 
         return $pdf->stream('struk_parkir'. $transaksi->id . '.pdf');
     }

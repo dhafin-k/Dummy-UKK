@@ -153,6 +153,10 @@
                                                 Keluar
                                             </button>
                                         </form>
+                                    @else
+                                        <a href="{{ route('petugas.transaksi.cetak-struk', $transaksi->id) }}" target="_blank" class="inline-flex items-center gap-1 px-3 py-1.5 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-900/20 rounded-md transition-colors">
+                                            Cetak Struk
+                                        </a>
                                     @endif
                                     <form action="{{ route('petugas.transaksi.destroy', $transaksi) }}" method="POST"
                                         onsubmit="return confirm('Yakin ingin menghapus transaksi ini?')"
