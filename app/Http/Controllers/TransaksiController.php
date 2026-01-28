@@ -201,6 +201,7 @@ class TransaksiController extends Controller
     {
         try {
             $data = Transaksi::findOrFail($id);
+            $data->area()->decrement('terisi');
             $data->delete();
 
             return redirect()->route('petugas.transaksi.index')->with('success', 'Transaksi berhasil dihapus.');

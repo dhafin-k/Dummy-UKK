@@ -67,10 +67,6 @@ $areaParkir = AreaParkir::all();
                         :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="users" :href="route('petugas.transaksi.index')"
-                        :current="request()->routeIs('petugas.transaksi.*')" wire:navigate>
-                        Transaksi
-                    </flux:sidebar.item>
                 </flux:sidebar.group>
 
                 <flux:sidebar.group expandable
@@ -93,10 +89,6 @@ $areaParkir = AreaParkir::all();
                     <flux:sidebar.item icon="home" :href="route('dashboard')"
                         :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
-                    </flux:sidebar.item>
-                    <flux:sidebar.item icon="users" :href="route('admin.users.index')"
-                        :current="request()->routeIs('admin.users.*')" wire:navigate>
-                        Rekap Transaksi
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             @endif
